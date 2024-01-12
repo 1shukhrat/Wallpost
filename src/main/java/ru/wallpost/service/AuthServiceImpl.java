@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import ru.wallpost.DTO.LoginDTO;
 import ru.wallpost.DTO.RegisterDTO;
 import ru.wallpost.security.JwtUtils;
-import ru.wallpost.util.UserAlreadyExistsException;
+import ru.wallpost.exception.UserAlreadyExistsException;
 
 @Service
 public class AuthServiceImpl implements AuthService{

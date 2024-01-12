@@ -1,4 +1,4 @@
-package ru.wallpost.util;
+package ru.wallpost.exception;
 
 public class UserAlreadyExistsException extends RuntimeException{
 
