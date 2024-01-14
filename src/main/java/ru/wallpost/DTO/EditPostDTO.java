@@ -8,7 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AddPostDTO {
+public class EditPostDTO {
+    private long id;
     private String text;
     private List<MultipartFile> images;
 }

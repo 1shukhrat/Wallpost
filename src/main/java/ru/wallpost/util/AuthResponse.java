@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,5 +14,5 @@ import java.util.Date;
 public class AuthResponse {
     private String message;
     private String token;
-    private Date date;
+    private LocalDateTime date;
 }

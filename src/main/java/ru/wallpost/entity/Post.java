@@ -1,7 +1,10 @@
 package ru.wallpost.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -11,6 +14,9 @@ import java.util.TreeSet;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "post")
 public class Post implements Comparable<Post> {
 

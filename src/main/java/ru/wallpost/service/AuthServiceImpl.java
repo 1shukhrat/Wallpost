@@ -42,4 +42,5 @@ public class AuthServiceImpl implements AuthService{
         return jwtUtils.generateToken((UserDetails) authentication.getPrincipal());
 
     }
+
 }
