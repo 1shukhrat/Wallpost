@@ -15,7 +15,7 @@ import ru.wallpost.exception.UserAlreadyExistsException;
 import ru.wallpost.service.AuthService;
 import ru.wallpost.util.AuthResponse;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api")
@@ -34,7 +34,7 @@ public class AuthController {
             throw new IllegalArgumentException("Неверный формат введенных данных");
         }
         AuthResponse authResponse = new AuthResponse("Пользователь успешно авторизован",
-                authService.SignIn(loginDTO), new Date());
+                authService.SignIn(loginDTO), LocalDateTime.now());
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
@@ -47,7 +47,7 @@ public class AuthController {
             throw new IllegalArgumentException("Пароли не совпадают");
         }
         AuthResponse authResponse = new AuthResponse("Пользователь успешно зарегистрирован",
-                authService.SignUp(registerDTO), new Date());
+                authService.SignUp(registerDTO), LocalDateTime.now());
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 

@@ -16,7 +16,7 @@ public interface AuthService {
         if (auth.isAuthenticated()) {
             return (UserDetails) auth.getPrincipal();
         } else {
-            throw new IllegalArgumentException("Пользователь не аутентифицирован");
+            throw new IllegalStateException("Пользователь не аутентифицирован");
         }
     }
 }

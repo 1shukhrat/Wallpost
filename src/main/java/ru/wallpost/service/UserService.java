@@ -6,5 +6,5 @@ import ru.wallpost.entity.User;
 public interface UserService {
 
     User add(RegisterDTO registerDTO);
-    boolean remove(long id);
+    void remove() throws IllegalStateException;
 }

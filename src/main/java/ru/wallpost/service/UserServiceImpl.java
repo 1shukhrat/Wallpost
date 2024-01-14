@@ -1,5 +1,6 @@
 package ru.wallpost.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService{
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     @Override
     public User add(RegisterDTO registerDTO) {
         if (userRepository.findByLogin(registerDTO.getLogin()).isPresent()) {
@@ -36,8 +38,12 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Transactional
     @Override
-    public boolean remove(long id) {
-        return false;
+    public void remove() throws IllegalStateException{
+        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        user.getSubscriptions().forEach(sub -> sub.getSubscribers().remove(user));
+        user.getSubscribers().forEach(sub -> sub.getSubscriptions().remove(user));
+        userRepository.delete(user);
     }
 }

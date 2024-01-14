@@ -1,9 +1,9 @@
 package ru.wallpost.service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.wallpost.DTO.AddPostDTO;
 import ru.wallpost.entity.Image;
@@ -30,17 +30,32 @@ public class PostServiceImpl implements PostService {
         this.imageService = imageService;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<Post> getAll(int page) {
+    public List<Post> getAll(int page) throws IllegalStateException{
         User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
         return postRepository.
-                findBySubscribersOrOrderByDateDesc(user.getSubscriptions(), PageRequest.of(page, 10))
+                findAllBySubscribersOrOrderByDateDesc(user.getSubscriptions(), PageRequest.of(page, 10))
                 .getContent();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Post> getAllByUser(long userId, int page) throws IllegalStateException{
+        return postRepository.
+                findAllByOwnerIdOrderByDateDesc(userId, PageRequest.of(page, 10))
+                .getContent();
+    }
+    @Transactional(readOnly = true)
+    @Override
+    public List<Post> getAllByAuthenticated(int page) throws IllegalStateException{
+        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        return getAllByUser(user.getId(), page);
     }
 
     @Transactional
     @Override
-    public Post post(AddPostDTO addPostDTO) throws IOException {
+    public Post post(AddPostDTO addPostDTO) throws IOException, IllegalStateException {
         User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
         Post post = Post.builder()
                 .text(addPostDTO.getText())
@@ -58,8 +73,9 @@ public class PostServiceImpl implements PostService {
     }
 
 
+    @Transactional
     @Override
-    public void remove(long id) throws IOException {
+    public void remove(long id) throws IOException, IllegalStateException {
         User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
         Optional<Post> postOptional = postRepository.findById(id);
         if (postOptional.isPresent() && user.getPosts().contains(postOptional.get())) {

@@ -1,13 +1,16 @@
 package ru.wallpost.DTO;
 
 
-import java.util.Set;
+import lombok.Builder;
 
-public class PostListDTO {
+import java.util.List;
+
+@Builder
+public class PostDTO {
     private long id;
     private UserDTO user;
     private String text;
-    private Set<ImageDTO> images;
+    private List<ImageDTO> images;
     private int countLikes;
     private int countCommentaries;
 }
