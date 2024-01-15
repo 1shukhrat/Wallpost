@@ -14,6 +14,8 @@ import java.util.UUID;
 public class FileUtil {
 
     private static final String URL_PATH = "http://localhost:8080/images/";
+
+    public static final String DEFAULT_AVATAR = URL_PATH + "default.jpg";
     private static final String UPLOAD_PATH = "images";
 
     public static String save(MultipartFile file) throws IOException {

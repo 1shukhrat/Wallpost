@@ -16,6 +16,7 @@ public class PostMapper {
                 .images(ImageMapper.toDTO(List.copyOf(post.getImages())))
                 .countLikes(post.getLikes().size())
                 .countCommentaries(post.getComments().size())
+                .date(post.getDate())
                 .build();
     }
 

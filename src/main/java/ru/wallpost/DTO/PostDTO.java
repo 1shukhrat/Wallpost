@@ -3,6 +3,7 @@ package ru.wallpost.DTO;
 
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -13,4 +14,5 @@ public class PostDTO {
     private List<ImageDTO> images;
     private int countLikes;
     private int countCommentaries;
+    private LocalDateTime date;
 }
