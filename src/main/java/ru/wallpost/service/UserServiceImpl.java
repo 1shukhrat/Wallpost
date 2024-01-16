@@ -8,6 +8,7 @@ import ru.wallpost.DTO.RegisterDTO;
 import ru.wallpost.entity.User;
 import ru.wallpost.exception.UserAlreadyExistsException;
 import ru.wallpost.repository.UserRepository;
+import ru.wallpost.util.FileUtil;
 
 
 @Service
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService{
                     .login(registerDTO.getLogin())
                     .password(passwordEncoder.encode(registerDTO.getPassword()))
                     .name(registerDTO.getName())
+                    .avatarLink(FileUtil.DEFAULT_AVATAR)
                     .build();
             userRepository.save(user);
             return user;

@@ -3,6 +3,7 @@ package ru.wallpost.util;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,18 +17,23 @@ public class FileUtil {
     private static final String URL_PATH = "http://localhost:8080/images/";
 
     public static final String DEFAULT_AVATAR = URL_PATH + "default.jpg";
-    private static final String UPLOAD_PATH = "images";
+    private static final String UPLOAD_PATH = "src/main/resources/static/images/";
 
     public static String save(MultipartFile file) throws IOException {
         String fileName = generateUniqueFileName(Objects.requireNonNull(file.getOriginalFilename()));
-        Path path = Path.of(UPLOAD_PATH, fileName);
+        Path path = Path.of(UPLOAD_PATH + fileName);
         Files.copy(file.getInputStream(), path);
         return URL_PATH + fileName;
     }
 
     public static void remove(String fileName) throws IOException {
-        Path path = Paths.get(UPLOAD_PATH, fileName);
+        Path path = Paths.get(UPLOAD_PATH + fileName);
         Files.deleteIfExists(path);
+    }
+
+    public static byte[] get(String fileName) throws IOException {
+        Path filePath = Paths.get(UPLOAD_PATH + fileName);
+        return Files.readAllBytes(filePath);
     }
 
     private static String generateUniqueFileName(String originalFileName) {

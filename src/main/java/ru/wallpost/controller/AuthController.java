@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.wallpost.DTO.LoginDTO;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<AuthResponse> signIn(@Valid LoginDTO loginDTO, BindingResult bindingResult) throws BadCredentialsException {
+    public ResponseEntity<AuthResponse> signIn(@RequestBody @Valid LoginDTO loginDTO, BindingResult bindingResult) throws BadCredentialsException {
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException("Неверный формат введенных данных");
         }
@@ -39,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<AuthResponse> signUp(@Valid RegisterDTO registerDTO, BindingResult bindingResult) throws UserAlreadyExistsException {
+    public ResponseEntity<AuthResponse> signUp(@RequestBody @Valid RegisterDTO registerDTO, BindingResult bindingResult) throws UserAlreadyExistsException {
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException("Неверный формат введенных данных");
         }

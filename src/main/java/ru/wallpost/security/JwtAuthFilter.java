@@ -31,7 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-        if (!header.isBlank() && header.startsWith("Bearer ")) {
+        if (header != null && header.startsWith("Bearer ")) {
             String jwt = header.substring(7);
             UserDetails userDetails =
                     userDetailsService.loadUserByUsername(jwtUtils.getUsername(jwt));

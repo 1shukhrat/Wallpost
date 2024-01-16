@@ -43,7 +43,8 @@ public class ProfileServiceImpl implements ProfileService{
     public User updateAvatar(MultipartFile multipartFile) throws IOException {
         User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
         String link = user.getAvatarLink();
-        FileUtil.remove(link.substring(link.lastIndexOf("/") + 1));
+        if (!user.getAvatarLink().equals(FileUtil.DEFAULT_AVATAR)) {
+            FileUtil.remove(link.substring(link.lastIndexOf("/") + 1));}
         user.setAvatarLink(FileUtil.save(multipartFile));
         return userRepository.save(user);
     }
@@ -53,7 +54,9 @@ public class ProfileServiceImpl implements ProfileService{
     public User removeAvatar() throws IOException {
         User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
         String link = user.getAvatarLink();
-        FileUtil.remove(link.substring(link.lastIndexOf("/") + 1));
+        if (!user.getAvatarLink().equals(FileUtil.DEFAULT_AVATAR)) {
+            FileUtil.remove(link.substring(link.lastIndexOf("/") + 1));
+        }
         user.setAvatarLink(FileUtil.DEFAULT_AVATAR);
         return userRepository.save(user);
     }

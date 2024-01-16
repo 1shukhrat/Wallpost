@@ -35,6 +35,7 @@ public class AuthServiceImpl implements AuthService{
         return jwtUtils.generateToken(userDetails);
     }
 
+    @Transactional
     @Override
     public String SignIn(LoginDTO loginDTO) throws BadCredentialsException {
         Authentication authentication = authenticationManager.authenticate(

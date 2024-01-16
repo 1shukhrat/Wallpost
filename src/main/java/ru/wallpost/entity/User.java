@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.wallpost.util.FileUtil;
 
 import java.util.*;
 
@@ -38,9 +39,10 @@ public class User implements UserDetails {
     @Column(name = "mood")
     private String mood;
 
-    @Column(name = "avatar", unique = true)
+    @Column(name = "avatar", unique = true, nullable = false)
     private String avatarLink;
 
+    @Transient
     private final String ROLE = "USER";
 
     @OneToMany(mappedBy = "owner", cascade = {CascadeType.REMOVE})

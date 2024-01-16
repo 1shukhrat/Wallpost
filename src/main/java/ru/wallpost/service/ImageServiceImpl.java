@@ -22,6 +22,11 @@ public class ImageServiceImpl implements ImageService {
         this.imageRepository = imageRepository;
     }
 
+    @Override
+    public byte[] get(String fileName) throws IOException {
+        return FileUtil.get(fileName);
+    }
+
     @Transactional
     @Override
     public Image save(MultipartFile file) throws IOException {
