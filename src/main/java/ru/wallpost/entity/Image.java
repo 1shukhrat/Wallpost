@@ -2,16 +2,17 @@ package ru.wallpost.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import java.util.Objects;
+
+
 @Entity
 @Table(name = "image")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class Image {
 
@@ -25,6 +26,19 @@ public class Image {
     private String link;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", referencedColumnName = "post_id", nullable = false)
+    @JoinColumn(name = "post_id", referencedColumnName = "post_id")
     private Post post;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Image image = (Image) o;
+        return id == image.id && Objects.equals(link, image.link) && Objects.equals(post, image.post);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, link, post);
+    }
 }

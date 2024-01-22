@@ -9,4 +9,8 @@ spring.jpa.properties.hibernate.format_sql=true
 
 #Security properties
 security.jwt.secret-key=
-security.jwt.expiration-time=
+security.jwt.expiration-time=24h
+
+#Multipart properties
+spring.servlet.multipart.max-file-size=50MB
+spring.servlet.multipart.max-request-size=50MB

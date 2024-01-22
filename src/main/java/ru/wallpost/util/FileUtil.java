@@ -19,6 +19,7 @@ public class FileUtil {
     public static final String DEFAULT_AVATAR = URL_PATH + "default.jpg";
     private static final String UPLOAD_PATH = "src/main/resources/static/images/";
 
+
     public static String save(MultipartFile file) throws IOException {
         String fileName = generateUniqueFileName(Objects.requireNonNull(file.getOriginalFilename()));
         Path path = Path.of(UPLOAD_PATH + fileName);

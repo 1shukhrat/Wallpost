@@ -34,7 +34,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     @Transactional(readOnly = true)
     @Override
     public Set<User> getAllMySubscribers() throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         return getAllUserSubscribers(user.getId());
     }
 
@@ -52,21 +52,19 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     @Transactional(readOnly = true)
     @Override
     public Set<User> getAllMySubscriptions() throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         return getAllUserSubscriptions(user.getId());
     }
 
     @Transactional
     @Override
     public void subscribe(long userId) throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
+        if (userOptional.isPresent() && userOptional.get().getId() != user.getId()) {
             User newSubscription = userOptional.get();
             user.getSubscriptions().add(newSubscription);
             newSubscription.getSubscribers().add(user);
-            userRepository.save(user);
-            userRepository.save(newSubscription);
         } else {
             throw new UsernameNotFoundException("Пользователь не найден");
         }
@@ -75,14 +73,12 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     @Transactional
     @Override
     public void unsubscribe(long userId) throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent() && user.getSubscriptions().contains(userOptional.get())) {
             User subscription = userOptional.get();
             user.getSubscriptions().remove(subscription);
             subscription.getSubscribers().remove(user);
-            userRepository.save(user);
-            userRepository.save(subscription);
         } else {
             throw new UsernameNotFoundException("Пользователь не найден");
         }

@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public void remove() throws IllegalStateException{
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         user.getSubscriptions().forEach(sub -> sub.getSubscribers().remove(user));
         user.getSubscribers().forEach(sub -> sub.getSubscriptions().remove(user));
         userRepository.delete(user);

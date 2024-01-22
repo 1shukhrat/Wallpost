@@ -13,7 +13,7 @@ public class PostMapper {
                 .id(post.getId())
                 .user(UserMapper.toDTO(post.getOwner()))
                 .text(post.getText())
-                .images(ImageMapper.toDTO(List.copyOf(post.getImages())))
+                .images(ImageMapper.toDTO(post.getImages().stream().toList()))
                 .countLikes(post.getLikes().size())
                 .countCommentaries(post.getComments().size())
                 .date(post.getDate())

@@ -47,13 +47,14 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> post(@RequestBody AddPostDTO addPostDTO) throws IOException, IllegalStateException {
+    public ResponseEntity<PostDTO> post(@ModelAttribute AddPostDTO addPostDTO) throws IOException, IllegalStateException {
         Post newPost = postService.post(addPostDTO);
         return new ResponseEntity<>(PostMapper.toDTO(newPost), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> remove(@PathVariable("id") long id) throws IOException, IllegalStateException {
+    public ResponseEntity<MessageResponse> remove(@PathVariable("id") long id) throws IOException,
+            IllegalStateException, IllegalArgumentException {
         postService.remove(id);
         return new ResponseEntity<>(new MessageResponse("Пост успешно удален", LocalDateTime.now()),
                 HttpStatus.OK);

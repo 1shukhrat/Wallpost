@@ -34,14 +34,14 @@ public class ProfileServiceImpl implements ProfileService{
     @Transactional(readOnly = true)
     @Override
     public User me() {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         return getByUserId(user.getId());
     }
 
     @Transactional
     @Override
     public User updateAvatar(MultipartFile multipartFile) throws IOException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         String link = user.getAvatarLink();
         if (!user.getAvatarLink().equals(FileUtil.DEFAULT_AVATAR)) {
             FileUtil.remove(link.substring(link.lastIndexOf("/") + 1));}
@@ -52,7 +52,7 @@ public class ProfileServiceImpl implements ProfileService{
     @Transactional
     @Override
     public User removeAvatar() throws IOException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         String link = user.getAvatarLink();
         if (!user.getAvatarLink().equals(FileUtil.DEFAULT_AVATAR)) {
             FileUtil.remove(link.substring(link.lastIndexOf("/") + 1));
@@ -64,7 +64,7 @@ public class ProfileServiceImpl implements ProfileService{
     @Transactional
     @Override
     public User updateInfo(UpdateInfoDTO updateInfoDTO) throws UserAlreadyExistsException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         Optional<User> checkedUser = userRepository.findByLogin(updateInfoDTO.getLogin());
         if (checkedUser.isPresent() && !checkedUser.get().getLogin().equals(user.getLogin())) {
             throw new UserAlreadyExistsException(checkedUser.get().getLogin());

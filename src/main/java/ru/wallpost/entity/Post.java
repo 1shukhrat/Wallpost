@@ -1,21 +1,16 @@
 package ru.wallpost.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 @Table(name = "post")
 public class Post implements Comparable<Post> {
@@ -43,6 +38,19 @@ public class Post implements Comparable<Post> {
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.REMOVE})
     private Set<Comment> comments = new TreeSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return id == post.id && Objects.equals(text, post.text) && Objects.equals(date, post.date) && Objects.equals(owner, post.owner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, text, date, owner);
+    }
 
     @Override
     public int compareTo(Post o) {

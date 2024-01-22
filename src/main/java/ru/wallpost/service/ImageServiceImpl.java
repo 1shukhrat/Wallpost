@@ -4,7 +4,6 @@ package ru.wallpost.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import ru.wallpost.entity.Image;
 import ru.wallpost.repository.ImageRepository;
 import ru.wallpost.util.FileUtil;
@@ -29,9 +28,8 @@ public class ImageServiceImpl implements ImageService {
 
     @Transactional
     @Override
-    public Image save(MultipartFile file) throws IOException {
-        String url = FileUtil.save(file);
-        return imageRepository.save(Image.builder().link(url).build());
+    public Image save(Image image) {
+        return imageRepository.save(image);
     }
 
     @Transactional

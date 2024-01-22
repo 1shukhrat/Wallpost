@@ -10,7 +10,7 @@ import ru.wallpost.entity.Image;
 import ru.wallpost.entity.Post;
 import ru.wallpost.entity.User;
 import ru.wallpost.repository.PostRepository;
-import ru.wallpost.repository.UserRepository;
+import ru.wallpost.util.FileUtil;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -19,13 +19,11 @@ import java.util.*;
 @Service
 public class PostServiceImpl implements PostService {
 
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ImageService imageService;
 
     @Autowired
-    public PostServiceImpl(UserRepository userRepository, PostRepository postRepository, ImageService imageService) {
-        this.userRepository = userRepository;
+    public PostServiceImpl(PostRepository postRepository, ImageService imageService) {
         this.postRepository = postRepository;
         this.imageService = imageService;
     }
@@ -33,9 +31,9 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     @Override
     public List<Post> getAll(int page) throws IllegalStateException{
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         return postRepository.
-                findAllBySubscribersOrOrderByDateDesc(user.getSubscriptions(), PageRequest.of(page, 10))
+                findAllBySubscriptionsOrOrderByDateDesc(user.getSubscriptions(), PageRequest.of(page, 10))
                 .getContent();
     }
 
@@ -49,23 +47,27 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     @Override
     public List<Post> getAllByAuthenticated(int page) throws IllegalStateException{
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         return getAllByUser(user.getId(), page);
     }
 
     @Transactional
     @Override
     public Post post(AddPostDTO addPostDTO) throws IOException, IllegalStateException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         Post post = Post.builder()
                 .text(addPostDTO.getText())
                 .date(LocalDateTime.now())
+                .comments(Collections.emptySet())
+                .likes(Collections.emptySet())
+                .images(Collections.emptySet())
                 .owner(user)
                 .build();
         Set<Image> images = new LinkedHashSet<>();
         for (MultipartFile image: addPostDTO.getImages()) {
-            Image savedImage = imageService.save(image);
-            savedImage.setPost(post);
+            String url = FileUtil.save(image);
+            Image savedImage = Image.builder().link(url).post(post).build();
+            imageService.save(savedImage);
             images.add(savedImage);
         }
         post.setImages(images);
@@ -76,7 +78,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public void remove(long id) throws IOException, IllegalStateException {
-        User user = userRepository.findByLogin(AuthService.getAuthenticated().getUsername()).get();
+        User user = (User) AuthService.getAuthenticated();
         Optional<Post> postOptional = postRepository.findById(id);
         if (postOptional.isPresent() && user.getPosts().contains(postOptional.get())) {
             Post post = postOptional.get();

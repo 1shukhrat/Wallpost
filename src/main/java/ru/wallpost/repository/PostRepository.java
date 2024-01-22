@@ -15,7 +15,7 @@ import java.util.Set;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p from Post p where p.owner in :subs order by p.date desc")
-    Slice<Post> findAllBySubscribersOrOrderByDateDesc(@Param("subs") Set<User> subscribers, Pageable p);
+    Slice<Post> findAllBySubscriptionsOrOrderByDateDesc(@Param("subs") Set<User> subscribers, Pageable p);
 
     Slice<Post> findAllByOwnerIdOrderByDateDesc(long userId, Pageable p);
 }
